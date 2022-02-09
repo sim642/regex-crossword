@@ -9,8 +9,10 @@ public class CrosswordSolver {
 
     public static RegExp createRegExp(String str) {
         // https://en.wikipedia.org/wiki/Regular_expression#Character_classes
+        // TODO: 09.02.22 \s inside []
         str = str.replaceAll("\\\\s", "[ \\t\\r\\n\\v\\f]");
         str = str.replaceAll("\\\\d", "[0-9]");
+        str = str.replaceAll("\\\\w", "[A-Za-z0-9_]");
         return new RegExp(str);
     }
 
@@ -49,5 +51,7 @@ public class CrosswordSolver {
         return solAuto.getShortestExample(true);
     }
 
-    // TODO: 09.02.22 double-cross
+    public static String solve(Crossword crossword, Crossword doubleCrossword) {
+        return solve(crossword.intersect(doubleCrossword));
+    }
 }

@@ -197,4 +197,244 @@ class CrosswordSolverTest {
         ));
         assertEquals("STEPTIMEEMITPETS", CrosswordSolver.solve(crossword));
     }
+
+    @Test
+    void doublecross1() {
+        Crossword crossword = new Crossword(List.of(
+                "[A-GN-Z]+"
+        ), List.of(
+                "[D-HJ-M]",
+                "[^A-RU-Z]"
+        ));
+        Crossword doubleCrossword = new Crossword(List.of(
+                "[^A-DI-S]+"
+        ), List.of(
+                "[^F-KM-Z]",
+                "[A-KS-V]"
+        ));
+        assertEquals("ET", CrosswordSolver.solve(crossword, doubleCrossword));
+    }
+
+    @Test
+    void doublecross2() {
+        Crossword crossword = new Crossword(List.of(
+                "(CAT|A-T)+",
+                //"[MA\\-\\sE]+"
+                "[MA\\- E]+"
+        ), List.of(
+                "[^MCI]+",
+                ".A",
+                "(TM|BF)"
+        ));
+        Crossword doubleCrossword = new Crossword(List.of(
+                //"[^KI\\sP]+",
+                "[^KI P]+",
+                "(M|APS|EA)*"
+        ), List.of(
+                //"[AI][E\\s]",
+                "[AI][E ]",
+                "[A\\-Z]+",
+                //"[\\sT\\-M]+
+                "[ T\\-M]+"
+        ));
+        assertEquals("A-TEAM", CrosswordSolver.solve(crossword, doubleCrossword));
+    }
+
+    @Test
+    void doublecross3() {
+        Crossword crossword = new Crossword(List.of(
+                "[ONE]*[SKA]",
+                ".*(RE|ER)",
+                "A+[TUB]*"
+        ), List.of(
+                ".*[GAF]*",
+                "(P|ET|O|TEA)*",
+                "[RUSH]+"
+        ));
+        Crossword doubleCrossword = new Crossword(List.of(
+                ".*(O|S)*",
+                "[^GOA]*",
+                "[STUPA]+"
+        ), List.of(
+                "(NF|FA|A|FN)+",
+                ".*(A|E|I).*",
+                "[SUPER]*"
+        ));
+        assertEquals("NOSFERATU", CrosswordSolver.solve(crossword, doubleCrossword));
+    }
+
+    @Test
+    void cities1() {
+        Crossword crossword = new Crossword(List.of(
+                "[LINE]+",
+                "[LAM]+"
+        ), List.of(
+                "(MA|LM)",
+                "[^MESH]+"
+        ));
+        Crossword doubleCrossword = new Crossword(List.of(
+                "[ISLE]+",
+                "[MALE]+"
+        ), List.of(
+                "[LAME]*",
+                "[^LES]+"
+        ));
+        assertEquals("LIMA", CrosswordSolver.solve(crossword, doubleCrossword));
+    }
+
+    @Test
+    void cities3() {
+        Crossword crossword = new Crossword(List.of(
+                "(W\\s|NE|PS)*",
+                "[YOU]{2}[ARK]+"
+        ), List.of(
+                "[NAYE]*",
+                "(EO|N\\s)",
+                "[WRONG]*",
+                "(K|R|I|M|\\s)+"
+        ));
+        Crossword doubleCrossword = new Crossword(List.of(
+                //"[END\\sWITH]+",
+                "[END WITH]+",
+                ".+R.*"
+        ), List.of(
+                "[YEN]+",
+                //"[ETPHONE\\s]+",
+                "[ETPHONE ]+",
+                //"[^GONE\\s]+",
+                "[^GONE ]+",
+                //"[\\sANKT]+"
+                "[ ANKT]+"
+        ));
+        assertEquals("NEW YORK", CrosswordSolver.solve(crossword, doubleCrossword));
+    }
+
+    @Test
+    void cities4() {
+        Crossword crossword = new Crossword(List.of(
+                //"[ALK\\sU]+(P|AL|E)+",
+                "[ALK U]+(P|AL|E)+",
+                "[ABC]\\s(LU|LP)]*",
+                "(RU|MP|UR|S)+"
+        ), List.of(
+                "(KA|LK)[MNO]",
+                ".+(AL|P)",
+                //"[^PIM\\s]+",
+                "[^PIM ]+",
+                "[LP].*[PR]"
+        ));
+        Crossword doubleCrossword = new Crossword(List.of(
+                //"[LUKE]{2}[LAKE\\s]+",
+                "[LUKE]{2}[LAKE ]+",
+                ".*[PUL]+",
+                "[RUMPUS]*"
+        ), List.of(
+                "[KRAMP]+",
+                //"U[PLAIN\\s]{2}",
+                "U[PLAIN ]{2}",
+                "[ALURE]+",
+                //"[RULE\\s]+"
+                "[RULE ]+"
+        ));
+        assertEquals("KUALA LUMPUR", CrosswordSolver.solve(crossword, doubleCrossword));
+    }
+
+    @Test
+    void cities5() {
+        Crossword crossword = new Crossword(List.of(
+                "[^SEAP]+",
+                //"[\\sPIN]E[NET]",
+                "[ PIN]E[NET]",
+                //"[^ONE\\s]+",
+                "[^ONE ]+",
+                //"[END\\s]+"
+                "[END ]+"
+        ), List.of(
+                //"[HELP\\s]+",
+                "[HELP ]+",
+                //"[^\\sPONG]+N",
+                "[^ PONG]+N",
+                "[SONG]+\\s"
+        ));
+        Crossword doubleCrossword = new Crossword(List.of(
+                //"[\\sCOPE]+",
+                "[ COPE]+",
+                //"[^HI\\s]+",
+                "[^HI ]+",
+                //"[\\sHAG]+",
+                "[ HAG]+",
+                "[^SODA]+"
+        ), List.of(
+                "[^SLIC]+\\w",
+                //"[OCEAN\\s]+",
+                "[OCEAN ]+",
+                "[^SPIES]+"
+        ));
+        assertEquals(" COPENHAGEN ", CrosswordSolver.solve(crossword, doubleCrossword));
+    }
+
+    @Test
+    void volapük1() {
+        Crossword crossword = new Crossword(List.of(
+                "(PO|R|G|E)*",
+                "(Z|OO)[KINZS]+"
+        ), List.of(
+                "[GRAPEZ]+",
+                //"[^ION\\sS]+",
+                "[^ION S]+",
+                "(ZO|OS|OP)"
+        ));
+        Crossword doubleCrossword = new Crossword(List.of(
+                "[GRA]P+.*",
+                //"(X|Y|Z)[KIS\\s]+"
+                "(X|Y|Z)[KIS ]+"
+        ), List.of(
+                "[GIN].",
+                //"[SPIK\\s]*",
+                "[SPIK ]*",
+                "[^ZYP]+"
+        ));
+        assertEquals("GPOZKS", CrosswordSolver.solve(crossword, doubleCrossword));
+    }
+
+    @Test
+    void hamlet3() {
+        Crossword crossword = new Crossword(List.of(
+                //"[HEL\\s]+P.+",
+                "[HEL ]+P.+",
+                "[MI/SON]+[^OLDE]{4}",
+                //"[IN'THE\\.\\s]+",
+                "[IN'THE\\. ]+",
+                ".[A-G]+(R|D)+[END]+"
+        ), List.of(
+                //"[O-S\\sG-L]+",
+                "[O-S G-L]+",
+                "[ANTIGE]+",
+                "(S\\s|\\sS|'A)+",
+                //"[PI\\sRD]+",
+                "[PI RD]+",
+                "(TD|L|LO|O|OH)+",
+                //"[HITE'\\s]+",
+                "[HITE' ]+",
+                "[MENDS]+"
+        ));
+        Crossword doubleCrossword = new Crossword(List.of(
+                //".[SEPOLI\\s]+",
+                ".[SEPOLI ]+",
+                ".{3,4}(\\sH|\\s|IM)+",
+                //"[IT'\\s]{4}[H.TE]+"
+                "[IT' ]{4}[H.TE]+",
+                ".{4}(NI|TE|N|DE)+"
+        ), List.of(
+                "(\\s\\s|OR|HO|ME)+",
+                "[A-G]N+(GI|IG|PI)",
+                //"[RAM\\sES']+",
+                "[RAM ES']+",
+                "[^AINED]+",
+                "[HORTED]+",
+                "[F-K]{2}[F-M]..?",
+                "(S|I|MS)[MYEND]*"
+        ));
+        assertEquals("HE POISONS HIM I' THE GARDEN", CrosswordSolver.solve(crossword, doubleCrossword));
+    }
 }
