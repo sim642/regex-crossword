@@ -32,7 +32,9 @@ package eu.sim642.regex_crossword;
 import dk.brics.automaton.Automaton;
 import dk.brics.automaton.BasicAutomata;
 
-public class RegExp2 {
+import java.util.List;
+
+public class AutomatonRegExp {
 
 	/**
 	 * Syntax flag, enables intersection (<code>&amp;</code>).
@@ -73,7 +75,7 @@ public class RegExp2 {
 	 * @param s regexp string
 	 * @exception IllegalArgumentException if an error occured while parsing the regular expression
 	 */
-	public RegExp2(String s) throws IllegalArgumentException {
+	public AutomatonRegExp(String s) throws IllegalArgumentException {
 		this(s, ALL);
 	}
 
@@ -83,7 +85,7 @@ public class RegExp2 {
 	 * @param syntax_flags boolean 'or' of optional syntax constructs to be enabled
 	 * @exception IllegalArgumentException if an error occured while parsing the regular expression
 	 */
-	public RegExp2(String s, int syntax_flags) {
+	public AutomatonRegExp(String s, int syntax_flags) {
 		b = s;
 		flags = syntax_flags;
 	}
@@ -298,14 +300,18 @@ public class RegExp2 {
 	}
 
 	final Automaton parseCharClass() throws IllegalArgumentException {
-		char c = parseCharExp();
-		if (match('-'))
-			if (peek("]"))
-                return makeUnion(makeChar(c), makeChar('-'));
-            else
-                return makeCharRange(c, parseCharExp());
-		else
-			return makeChar(c);
+		if (match('\\')) {
+			return parseEscape();
+		} else {
+			char c = next();
+			if (match('-'))
+				if (peek("]"))
+					return makeUnion(makeChar(c), makeChar('-'));
+				else
+					return makeCharRange(c, next());
+			else
+				return makeChar(c);
+		}
 	}
 
 	final Automaton parseSimpleExp() throws IllegalArgumentException {
@@ -320,12 +326,21 @@ public class RegExp2 {
 			if (!match(')'))
 				throw new IllegalArgumentException("expected ')' at position " + pos);
 			return e;
+		} else if (match('\\')) {
+			return parseEscape();
 		} else
-			return makeChar(parseCharExp());
+			return makeChar(next());
 	}
 
-	final char parseCharExp() throws IllegalArgumentException {
-		match('\\');
-		return next();
+	private Automaton parseEscape() {
+		char escape = next();
+		return switch (escape) {
+			// https://en.wikipedia.org/wiki/Regular_expression#Character_classes
+			//case 's' -> BasicAutomata.makeCharSet(" \t\r\n\f"); // no \v
+			case 's' -> BasicAutomata.makeCharSet(" "); // TODO: 09.02.22 non-unique
+			case 'd' -> BasicAutomata.makeCharRange('0', '9');
+			case 'w' -> Automaton.union(List.of(BasicAutomata.makeCharRange('A', 'Z'), BasicAutomata.makeCharRange('a', 'z'), BasicAutomata.makeCharRange('0', '9'), BasicAutomata.makeChar('_')));
+			default -> makeChar(escape);
+		};
 	}
 }

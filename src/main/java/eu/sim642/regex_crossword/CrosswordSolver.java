@@ -7,14 +7,8 @@ import java.util.List;
 
 public class CrosswordSolver {
 
-    public static Automaton createRegExp(String str) {
-        // https://en.wikipedia.org/wiki/Regular_expression#Character_classes
-        // TODO: 09.02.22 \s inside []
-        str = str.replaceAll("\\\\s", "[ \\t\\r\\n\\v\\f]");
-        str = str.replaceAll("\\\\d", "[0-9]");
-        str = str.replaceAll("\\\\w", "[A-Za-z0-9_]");
-        //return new RegExp(str).toAutomaton();
-        return new RegExp2(str).toAutomaton();
+    public static Automaton regExpAutomaton(String str) {
+        return new AutomatonRegExp(str).toAutomaton();
     }
 
     private static Automaton repeatExact(Automaton automaton, int count) {
@@ -26,7 +20,7 @@ public class CrosswordSolver {
 
         List<Automaton> rowAutos = new ArrayList<>();
         for (int y = 0; y < crossword.height(); y++) {
-            Automaton row = createRegExp(crossword.rows().get(y));
+            Automaton row = regExpAutomaton(crossword.rows().get(y));
             Automaton prefix = repeatExact(anyCharWidth, y);
             Automaton rowWidth = row.intersection(anyCharWidth);
             Automaton suffix = repeatExact(anyCharWidth, crossword.height() - y - 1);
@@ -37,7 +31,7 @@ public class CrosswordSolver {
 
         List<Automaton> colAutos = new ArrayList<>();
         for (int x = 0; x < crossword.width(); x++) {
-            Automaton col = createRegExp(crossword.cols().get(x));
+            Automaton col = regExpAutomaton(crossword.cols().get(x));
             Automaton offset = repeatExact(BasicAutomata.makeAnyChar(), x);
             Automaton guard = offset.concatenate(anyCharWidth.repeat());
             colAutos.add(ProductOperations.guarded(col, guard));

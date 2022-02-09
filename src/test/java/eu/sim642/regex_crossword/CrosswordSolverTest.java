@@ -219,23 +219,19 @@ class CrosswordSolverTest {
     void doublecross2() {
         Crossword crossword = new Crossword(List.of(
                 "(CAT|A-T)+",
-                //"[MA\\-\\sE]+"
-                "[MA\\- E]+"
+                "[MA\\-\\sE]+"
         ), List.of(
                 "[^MCI]+",
                 ".A",
                 "(TM|BF)"
         ));
         Crossword doubleCrossword = new Crossword(List.of(
-                //"[^KI\\sP]+",
-                "[^KI P]+",
+                "[^KI\\sP]+",
                 "(M|APS|EA)*"
         ), List.of(
-                //"[AI][E\\s]",
-                "[AI][E ]",
+                "[AI][E\\s]",
                 "[A\\-Z]+",
-                //"[\\sT\\-M]+
-                "[ T\\-M]+"
+                "[\\sT\\-M]+"
         ));
         assertEquals("A-TEAM", CrosswordSolver.solve(crossword, doubleCrossword));
     }
@@ -294,17 +290,13 @@ class CrosswordSolverTest {
                 "(K|R|I|M|\\s)+"
         ));
         Crossword doubleCrossword = new Crossword(List.of(
-                //"[END\\sWITH]+",
-                "[END WITH]+",
+                "[END\\sWITH]+",
                 ".+R.*"
         ), List.of(
                 "[YEN]+",
-                //"[ETPHONE\\s]+",
-                "[ETPHONE ]+",
-                //"[^GONE\\s]+",
-                "[^GONE ]+",
-                //"[\\sANKT]+"
-                "[ ANKT]+"
+                "[ETPHONE\\s]+",
+                "[^GONE\\s]+",
+                "[\\sANKT]+"
         ));
         assertEquals("NEW YORK", CrosswordSolver.solve(crossword, doubleCrossword));
     }
@@ -312,29 +304,24 @@ class CrosswordSolverTest {
     @Test
     void cities4() {
         Crossword crossword = new Crossword(List.of(
-                //"[ALK\\sU]+(P|AL|E)+",
-                "[ALK U]+(P|AL|E)+",
+                "[ALK\\sU]+(P|AL|E)+",
                 "[ABC]\\s(LU|LP)]*",
                 "(RU|MP|UR|S)+"
         ), List.of(
                 "(KA|LK)[MNO]",
                 ".+(AL|P)",
-                //"[^PIM\\s]+",
-                "[^PIM ]+",
+                "[^PIM\\s]+",
                 "[LP].*[PR]"
         ));
         Crossword doubleCrossword = new Crossword(List.of(
-                //"[LUKE]{2}[LAKE\\s]+",
-                "[LUKE]{2}[LAKE ]+",
+                "[LUKE]{2}[LAKE\\s]+",
                 ".*[PUL]+",
                 "[RUMPUS]*"
         ), List.of(
                 "[KRAMP]+",
-                //"U[PLAIN\\s]{2}",
-                "U[PLAIN ]{2}",
+                "U[PLAIN\\s]{2}",
                 "[ALURE]+",
-                //"[RULE\\s]+"
-                "[RULE ]+"
+                "[RULE\\s]+"
         ));
         assertEquals("KUALA LUMPUR", CrosswordSolver.solve(crossword, doubleCrossword));
     }
@@ -343,31 +330,22 @@ class CrosswordSolverTest {
     void cities5() {
         Crossword crossword = new Crossword(List.of(
                 "[^SEAP]+",
-                //"[\\sPIN]E[NET]",
-                "[ PIN]E[NET]",
-                //"[^ONE\\s]+",
-                "[^ONE ]+",
-                //"[END\\s]+"
-                "[END ]+"
+                "[\\sPIN]E[NET]",
+                "[^ONE\\s]+",
+                "[END\\s]+"
         ), List.of(
-                //"[HELP\\s]+",
-                "[HELP ]+",
-                //"[^\\sPONG]+N",
-                "[^ PONG]+N",
+                "[HELP\\s]+",
+                "[^\\sPONG]+N",
                 "[SONG]+\\s"
         ));
         Crossword doubleCrossword = new Crossword(List.of(
-                //"[\\sCOPE]+",
-                "[ COPE]+",
-                //"[^HI\\s]+",
-                "[^HI ]+",
-                //"[\\sHAG]+",
-                "[ HAG]+",
+                "[\\sCOPE]+",
+                "[^HI\\s]+",
+                "[\\sHAG]+",
                 "[^SODA]+"
         ), List.of(
                 "[^SLIC]+\\w",
-                //"[OCEAN\\s]+",
-                "[OCEAN ]+",
+                "[OCEAN\\s]+",
                 "[^SPIES]+"
         ));
         assertEquals(" COPENHAGEN ", CrosswordSolver.solve(crossword, doubleCrossword));
@@ -380,18 +358,15 @@ class CrosswordSolverTest {
                 "(Z|OO)[KINZS]+"
         ), List.of(
                 "[GRAPEZ]+",
-                //"[^ION\\sS]+",
-                "[^ION S]+",
+                "[^ION\\sS]+",
                 "(ZO|OS|OP)"
         ));
         Crossword doubleCrossword = new Crossword(List.of(
                 "[GRA]P+.*",
-                //"(X|Y|Z)[KIS\\s]+"
-                "(X|Y|Z)[KIS ]+"
+                "(X|Y|Z)[KIS\\s]+"
         ), List.of(
                 "[GIN].",
-                //"[SPIK\\s]*",
-                "[SPIK ]*",
+                "[SPIK\\s]*",
                 "[^ZYP]+"
         ));
         assertEquals("GPOZKS", CrosswordSolver.solve(crossword, doubleCrossword));
@@ -400,36 +375,28 @@ class CrosswordSolverTest {
     @Test
     void hamlet3() {
         Crossword crossword = new Crossword(List.of(
-                //"[HEL\\s]+P.+",
-                "[HEL ]+P.+",
+                "[HEL\\s]+P.+",
                 "[MI/SON]+[^OLDE]{4}",
-                //"[IN'THE\\.\\s]+",
-                "[IN'THE\\. ]+",
+                "[IN'THE\\.\\s]+",
                 ".[A-G]+(R|D)+[END]+"
         ), List.of(
-                //"[O-S\\sG-L]+",
-                "[O-S G-L]+",
+                "[O-S\\sG-L]+",
                 "[ANTIGE]+",
                 "(S\\s|\\sS|'A)+",
-                //"[PI\\sRD]+",
-                "[PI RD]+",
+                "[PI\\sRD]+",
                 "(TD|L|LO|O|OH)+",
-                //"[HITE'\\s]+",
-                "[HITE' ]+",
+                "[HITE'\\s]+",
                 "[MENDS]+"
         ));
         Crossword doubleCrossword = new Crossword(List.of(
-                //".[SEPOLI\\s]+",
-                ".[SEPOLI ]+",
+                ".[SEPOLI\\s]+",
                 ".{3,4}(\\sH|\\s|IM)+",
-                //"[IT'\\s]{4}[H.TE]+"
-                "[IT' ]{4}[H.TE]+",
+                "[IT'\\s]{4}[H.TE]+",
                 ".{4}(NI|TE|N|DE)+"
         ), List.of(
                 "(\\s\\s|OR|HO|ME)+",
                 "[A-G]N+(GI|IG|PI)",
-                //"[RAM\\sES']+",
-                "[RAM ES']+",
+                "[RAM\\sES']+",
                 "[^AINED]+",
                 "[HORTED]+",
                 "[F-K]{2}[F-M]..?",
