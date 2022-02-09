@@ -7,11 +7,18 @@ import java.util.List;
 
 public class CrosswordSolver {
 
+    public static RegExp createRegExp(String str) {
+        // https://en.wikipedia.org/wiki/Regular_expression#Character_classes
+        str = str.replaceAll("\\\\s", "[ \\t\\r\\n\\v\\f]");
+        str = str.replaceAll("\\\\d", "[0-9]");
+        return new RegExp(str);
+    }
+
     public static String solve(Crossword crossword) {
         List<Automaton> rowAutos = new ArrayList<>();
         Automaton anyCharWidth = BasicAutomata.makeAnyChar().repeat(crossword.width(), crossword.width());
         for (int y = 0; y < crossword.height(); y++) {
-            RegExp row = new RegExp(crossword.rows().get(y));
+            RegExp row = createRegExp(crossword.rows().get(y));
             rowAutos.add(anyCharWidth.repeat(y, y).concatenate(row.toAutomaton().intersection(anyCharWidth)).concatenate(anyCharWidth.repeat(crossword.height() - y - 1, crossword.height() - y - 1)));
         }
 
@@ -23,7 +30,7 @@ public class CrosswordSolver {
         List<Automaton> colAutos = new ArrayList<>();
         //Automaton anyCharHeight = BasicAutomata.makeAnyChar().repeat(height, height);
         for (int x = 0; x < crossword.width(); x++) {
-            RegExp col = new RegExp(crossword.cols().get(x));
+            RegExp col = createRegExp(crossword.cols().get(x));
             Automaton g = BasicAutomata.makeAnyChar().repeat(x, x).concatenate(anyCharWidth.repeat());
             Automaton guarded = ProductOperations.guarded(col.toAutomaton(), g);
             //guarded.minimize();
@@ -41,4 +48,6 @@ public class CrosswordSolver {
         //System.out.println(solAuto.getFiniteStrings());
         return solAuto.getShortestExample(true);
     }
+
+    // TODO: 09.02.22 double-cross
 }
