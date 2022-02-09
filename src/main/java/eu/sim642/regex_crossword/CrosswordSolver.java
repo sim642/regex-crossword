@@ -16,38 +16,36 @@ public class CrosswordSolver {
         return new RegExp(str);
     }
 
+    private static Automaton repeatExact(Automaton automaton, int count) {
+        return automaton.repeat(count, count);
+    }
+
     public static String solve(Crossword crossword) {
+        Automaton anyCharWidth = repeatExact(BasicAutomata.makeAnyChar(), crossword.width());
+
         List<Automaton> rowAutos = new ArrayList<>();
-        Automaton anyCharWidth = BasicAutomata.makeAnyChar().repeat(crossword.width(), crossword.width());
         for (int y = 0; y < crossword.height(); y++) {
             RegExp row = createRegExp(crossword.rows().get(y));
-            rowAutos.add(anyCharWidth.repeat(y, y).concatenate(row.toAutomaton().intersection(anyCharWidth)).concatenate(anyCharWidth.repeat(crossword.height() - y - 1, crossword.height() - y - 1)));
+            Automaton prefix = repeatExact(anyCharWidth, y);
+            Automaton rowWidth = row.toAutomaton().intersection(anyCharWidth);
+            Automaton suffix = repeatExact(anyCharWidth, crossword.height() - y - 1);
+            rowAutos.add(prefix.concatenate(rowWidth).concatenate(suffix));
         }
 
         Automaton rowsAuto = rowAutos.stream().reduce(Automaton::intersection).get();
-        //rowsAuto.minimize();
-        //System.out.println(rowsAuto);
-        //System.out.println(rowsAuto.getFiniteStrings());
 
         List<Automaton> colAutos = new ArrayList<>();
-        //Automaton anyCharHeight = BasicAutomata.makeAnyChar().repeat(height, height);
         for (int x = 0; x < crossword.width(); x++) {
             RegExp col = createRegExp(crossword.cols().get(x));
-            Automaton g = BasicAutomata.makeAnyChar().repeat(x, x).concatenate(anyCharWidth.repeat());
-            Automaton guarded = ProductOperations.guarded(col.toAutomaton(), g);
-            //guarded.minimize();
-            //System.out.println(guarded);
-            colAutos.add(guarded);
+            Automaton offset = repeatExact(BasicAutomata.makeAnyChar(), x);
+            Automaton guard = offset.concatenate(anyCharWidth.repeat());
+            colAutos.add(ProductOperations.guarded(col.toAutomaton(), guard));
         }
+
         Automaton colsAuto = colAutos.stream().reduce(Automaton::intersection).get();
-        //colsAuto.minimize();
-        //System.out.println(colsAuto);
-        //System.out.println(colsAuto.getFiniteStrings());
 
         Automaton solAuto = rowsAuto.intersection(colsAuto);
-        solAuto.minimize();
-        //System.out.println(solAuto);
-        //System.out.println(solAuto.getFiniteStrings());
+        //solAuto.minimize();
         return solAuto.getShortestExample(true);
     }
 
