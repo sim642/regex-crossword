@@ -33,6 +33,7 @@ import dk.brics.automaton.Automaton;
 import dk.brics.automaton.BasicAutomata;
 
 import java.util.List;
+import java.util.Map;
 
 public class AutomatonRegExp {
 
@@ -68,6 +69,14 @@ public class AutomatonRegExp {
 	int pos;
 
 	private boolean minimize;
+	private final Map<Character, Automaton> charClassEscapes;
+
+	// https://en.wikipedia.org/wiki/Regular_expression#Character_classes
+	public static final Map<Character, Automaton> STANDARD_CHAR_CLASS_ESCAPES = Map.of(
+			's', BasicAutomata.makeCharSet(" \t\r\n\f"), // no \v
+			'd', BasicAutomata.makeCharRange('0', '9'),
+			'w', Automaton.union(List.of(BasicAutomata.makeCharRange('A', 'Z'), BasicAutomata.makeCharRange('a', 'z'), BasicAutomata.makeCharRange('0', '9'), BasicAutomata.makeChar('_')))
+	);
 
 	/**
 	 * Constructs new <code>RegExp</code> from a string.
@@ -76,18 +85,20 @@ public class AutomatonRegExp {
 	 * @exception IllegalArgumentException if an error occured while parsing the regular expression
 	 */
 	public AutomatonRegExp(String s) throws IllegalArgumentException {
-		this(s, ALL);
+		this(s, ALL, STANDARD_CHAR_CLASS_ESCAPES);
 	}
 
 	/**
 	 * Constructs new <code>RegExp</code> from a string.
 	 * @param s regexp string
 	 * @param syntax_flags boolean 'or' of optional syntax constructs to be enabled
+	 * @param charClassEscapes
 	 * @exception IllegalArgumentException if an error occured while parsing the regular expression
 	 */
-	public AutomatonRegExp(String s, int syntax_flags) {
+	public AutomatonRegExp(String s, int syntax_flags, Map<Character, Automaton> charClassEscapes) {
 		b = s;
 		flags = syntax_flags;
+		this.charClassEscapes = charClassEscapes;
 	}
 
 	public Automaton toAutomaton() {
@@ -334,13 +345,6 @@ public class AutomatonRegExp {
 
 	private Automaton parseEscape() {
 		char escape = next();
-		return switch (escape) {
-			// https://en.wikipedia.org/wiki/Regular_expression#Character_classes
-			//case 's' -> BasicAutomata.makeCharSet(" \t\r\n\f"); // no \v
-			case 's' -> BasicAutomata.makeCharSet(" "); // TODO: 09.02.22 non-unique
-			case 'd' -> BasicAutomata.makeCharRange('0', '9');
-			case 'w' -> Automaton.union(List.of(BasicAutomata.makeCharRange('A', 'Z'), BasicAutomata.makeCharRange('a', 'z'), BasicAutomata.makeCharRange('0', '9'), BasicAutomata.makeChar('_')));
-			default -> makeChar(escape);
-		};
+		return charClassEscapes.getOrDefault(escape, makeChar(escape));
 	}
 }

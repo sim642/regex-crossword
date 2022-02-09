@@ -3,12 +3,20 @@ package eu.sim642.regex_crossword;
 import dk.brics.automaton.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CrosswordSolver {
 
+    private static final Map<Character, Automaton> CHAR_CLASS_ESCAPES;
+    static {
+        CHAR_CLASS_ESCAPES = new HashMap<>(AutomatonRegExp.STANDARD_CHAR_CLASS_ESCAPES);
+        CHAR_CLASS_ESCAPES.put('s', BasicAutomata.makeChar(' ')); // avoid ambiguity
+    }
+
     public static Automaton regExpAutomaton(String str) {
-        return new AutomatonRegExp(str).toAutomaton();
+        return new AutomatonRegExp(str, AutomatonRegExp.ALL, CHAR_CLASS_ESCAPES).toAutomaton();
     }
 
     private static Automaton repeatExact(Automaton automaton, int count) {

@@ -73,7 +73,7 @@ class CrosswordSolverTest {
     @Test
     void tutorial9() {
         Crossword crossword = new Crossword(List.of("\\s"), List.of("A|\\s"));
-        assertEquals(" ", CrosswordSolver.solve(crossword)); // TODO: 09.02.22 non-unique testing
+        assertEquals(" ", CrosswordSolver.solve(crossword));
     }
 
     @Test
